@@ -13,6 +13,7 @@
 #include <glm\gtc\type_ptr.hpp>
 
 const GLint WIDTH = 800, HEIGHT = 600;
+const float toRadians = 3.14152965f / 180.0f;
 
 GLuint VAO, VBO, shader, uniformModel;
 
@@ -166,7 +167,9 @@ int main()
         glUseProgram(shader);
 
         glm::mat4 model(1.0f);
+        model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
         model = glm::translate(model, glm::vec3(triOffset, 0.0f, 0.0f));
+
         glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 
         glBindVertexArray(VAO);
