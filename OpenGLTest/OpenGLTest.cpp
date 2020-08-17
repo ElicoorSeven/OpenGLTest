@@ -22,6 +22,13 @@ float triOffset = 0.0f;
 float triMaxOffset = 0.7f;
 float triIncriment = 0.001f;
 
+float curAngle = 0.0f;
+
+bool sizeDirection = true;
+float curSize = 0.5f;
+float maxSize = 1.0f;
+float minSize = 0.0f;
+
 //vertex shader
 
 static const char* vShader = "                             \n\
@@ -30,7 +37,7 @@ layout(location = 0) in vec3 pos;                          \n\
 uniform mat4 model;                                       \n\
 void main()                                                \n\
 {                                                          \n\
-    gl_Position = model * vec4(.6 * pos.x, .6 * pos.y,pos.z,1);    \n\
+    gl_Position = model * vec4(pos, 1);    \n\
 }";
 
 static const char* fShader = "                             \n\
@@ -80,7 +87,7 @@ void CompileShaders() {
     GLchar eLog[1024] = { 0 };
     glLinkProgram(shader);
     glGetProgramiv(shader, GL_LINK_STATUS, &result);
-    if (!result) 
+    if (!result)
     {
         glGetProgramInfoLog(shader, sizeof(eLog), NULL, eLog);
         printf("Error linking program: %s \n", eLog);
@@ -103,7 +110,7 @@ void CreateTriangle()
     glBindVertexArray(VAO);
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices),vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(0);
 
@@ -134,7 +141,7 @@ int main()
     int bufferWidth, bufferHeight;
     glfwGetFramebufferSize(mainWindow, &bufferWidth, &bufferHeight);
     glfwMakeContextCurrent(mainWindow);
-    
+
     glewExperimental = GL_TRUE; // allow modern features
     if (glewInit() != GLEW_OK) {
         printf("GLEW failed to Initialize!");
@@ -161,14 +168,28 @@ int main()
             direction = !direction;
         }
 
+        if (sizeDirection) {
+            curSize += 0.001f;
+
+        }
+        else {
+            curSize -= 0.001f;
+        }
+
+        if (curSize >= maxSize || curSize <= minSize) sizeDirection = !sizeDirection;
+
+
+        curAngle += 0.001f;
+
         glClearColor(0.0f, 1.0f, 0.0f, .5f);
         glClear(GL_COLOR_BUFFER_BIT);
         
         glUseProgram(shader);
 
         glm::mat4 model(1.0f);
-        model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
         model = glm::translate(model, glm::vec3(triOffset, 0.0f, 0.0f));
+        model = glm::rotate(model, curAngle, glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::scale(model, glm::vec3(curSize, curSize * -1, .6f));
 
         glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 
