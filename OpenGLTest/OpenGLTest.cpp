@@ -34,18 +34,21 @@ float minSize = 0.0f;
 static const char* vShader = "                             \n\
 #version 330                                               \n\
 layout(location = 0) in vec3 pos;                          \n\
-uniform mat4 model;                                       \n\
+uniform mat4 model;                                        \n\
+out vec4 vertexColor;                                       \n\
 void main()                                                \n\
 {                                                          \n\
     gl_Position = model * vec4(pos, 1);    \n\
+    vertexColor = vec4(clamp(pos, 0.0f, 1.0f), 1.0f);      \n\
 }";
 
 static const char* fShader = "                             \n\
 #version 330                                               \n\
 out vec4 color;                                            \n\
+in vec4 vertexColor;                                              \n\
 void main()                                                \n\
 {                                                          \n\
-    color = vec4(0.0,0.0,1.0,1);               \n\
+    color = vertexColor;              \n\
 }";
 
 void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType) {
