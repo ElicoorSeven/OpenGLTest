@@ -9,7 +9,7 @@ class Texture
 {
 public:
 	Texture();
-	Texture(char* fileLoc);
+	Texture(std::string fileLoc);
 
 	void LoadTexture();
 	void UseTexture();
