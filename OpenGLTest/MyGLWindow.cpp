@@ -4,6 +4,11 @@ MyGLWindow::MyGLWindow()
 {
 	windowWidth = 800;
 	windowHeight = 600;
+	xChange = 0.0f;
+	yChange = 0.0f;
+	lastX = 0;
+	lastY = 0;
+	mouseFirstMoved = true;
 	bufferHeight = 0;
 	bufferWidth = 0;
 	mainWindow = NULL;
@@ -19,6 +24,11 @@ MyGLWindow::MyGLWindow(GLint windowWidth, GLint windowHeight)
 	this->windowHeight = windowHeight;
 	bufferHeight = 0;
 	bufferWidth = 0;
+	xChange = 0;
+	yChange = 0;
+	lastX = 0;
+	lastY = 0;
+	mouseFirstMoved = true;
 	mainWindow = NULL;
 	for (size_t i = 0; i < 1024; i++)
 	{
