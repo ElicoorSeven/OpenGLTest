@@ -8,6 +8,8 @@ Shader::Shader()
     uniformView = 0;
     uniformAmbientIntensity = 0;
     uniformAmbientColor = 0;
+    uniformDiffuseIntensity = 0;
+    uniformDirection = 0;
 }
 
 void Shader::CreateFromString(const char* vertexCode, const char* fragmentCode)
@@ -81,6 +83,8 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
     uniformView = glGetUniformLocation(shaderID, "view");
     uniformAmbientColor = glGetUniformLocation(shaderID, "directionalLight.color");
     uniformAmbientIntensity = glGetUniformLocation(shaderID, "directionalLight.ambientIntensity");
+    uniformDirection = glGetUniformLocation(shaderID, "directionalLight.direction");
+    uniformDiffuseIntensity = glGetUniformLocation(shaderID, "directionalLight.diffuseIntensity");
 }
 
 GLuint Shader::GetProjectionLocation()
@@ -106,6 +110,16 @@ GLuint Shader::GetAmbientIntensityLocation()
 GLuint Shader::GetAmbientColorLocation()
 {
     return uniformAmbientColor;
+}
+
+GLuint Shader::GetDiffuseIntensityLocation()
+{
+    return uniformDiffuseIntensity;
+}
+
+GLuint Shader::GetDirectionLocation()
+{
+    return uniformDirection;
 }
 
 void Shader::UseShader()
@@ -148,8 +162,8 @@ void Shader::AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderT
     glGetShaderiv(theShader, GL_COMPILE_STATUS, &result);
     if (!result)
     {
-        glGetProgramInfoLog(theShader, sizeof(eLog), NULL, eLog);
-        printf("Error compiling the %d shader: '%s' \n", shaderType, eLog);
+        glGetShaderInfoLog(theShader, sizeof(eLog), NULL, eLog);
+        printf("Error compiling the %d shader: '%s'\n", shaderType, eLog);
         return;
     }
     glAttachShader(theProgram, theShader);
