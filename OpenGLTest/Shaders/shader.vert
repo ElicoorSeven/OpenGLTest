@@ -11,6 +11,7 @@ uniform mat4 view;
 out vec4 vertexColor;
 out vec2 TexCoord;
 out vec3 Normal;
+out vec3 FragPos;
 
 void main()
 {
@@ -18,4 +19,5 @@ void main()
     vertexColor = vec4(clamp(pos, 0.0f, 1.0f), 1.0f);
     TexCoord = tex;
     Normal = mat3(transpose(inverse(model))) * normal;
+    FragPos = (model * vec4(pos, 1.0)).xyz;
 }

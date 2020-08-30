@@ -33,6 +33,11 @@ Camera::~Camera()
 {
 }
 
+glm::vec3 Camera::getCameraPosition()
+{
+	return position;
+}
+
 void Camera::keyControl(bool* keys, GLfloat deltaTime)
 { 
 	GLfloat velocity = movementSpeed * deltaTime;
