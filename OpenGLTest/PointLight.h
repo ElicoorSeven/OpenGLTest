@@ -7,11 +7,12 @@ public:
 	PointLight(GLfloat red, GLfloat green, GLfloat blue, GLfloat aIntensity, GLfloat dIntensity,
 		GLfloat xPos, GLfloat yPos, GLfloat zPos,
 		GLfloat attenuationConst, GLfloat attenuationLinear, GLfloat attenuationExponent);
-	void UseLight(GLfloat ambientItensityLocation, GLfloat ambientColorLocation, GLfloat diffuseIntensityLocation, GLfloat positionLocation,
-		GLfloat attenuationConstantLocation, GLfloat attenuationLinearLocation, GLfloat attenuationExponentLocation);
+	void UseLight(GLuint ambientItensityLocation, GLuint ambientColorLocation, GLuint diffuseIntensityLocation, GLuint positionLocation,
+		GLuint attenuationConstantLocation, GLuint attenuationLinearLocation, GLuint attenuationExponentLocation);
 	~PointLight();
-private:
-	glm::vec3 position;
+
+protected:
 	GLfloat attenuationConst, attenuationLinear, attenuationExponent;
+	glm::vec3 position;
 };
 

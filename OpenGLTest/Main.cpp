@@ -39,6 +39,7 @@ Material dullMaterial;
 
 DirectionalLight mainLight;
 PointLight pointLights[MAX_POINT_LIGHTS];
+SpotLight spotLights[MAX_SPOT_LIGHTS];
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
@@ -157,6 +158,16 @@ int main()
 		-4.0f, 2.0f, 0.0f,
 		0.3f, 0.1f, 0.1f);
 	pointLightCount++;
+	pointLightCount--;
+	pointLightCount--;
+	unsigned int spotLightCount = 0;
+	spotLights[0] = SpotLight(1.0f, 0.0f, 0.0f,
+		0.0f, 1.0f,
+		0.0f, 0.0f, 0.0f,
+		0.0f, -1.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		20.0f);
+	spotLightCount++;
 
 
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformSpecularIntensity = 0, uniformSpecularPower = 0, uniformEyePositionLocation = 0;
@@ -189,6 +200,7 @@ int main()
 
 		shaderList[0].SetDirectionalLight(&mainLight);
 		shaderList[0].SetPointLights(pointLights, pointLightCount);
+		shaderList[0].SetSpotLights(spotLights, spotLightCount);
 
 		glm::mat4 model(1.0f);
 

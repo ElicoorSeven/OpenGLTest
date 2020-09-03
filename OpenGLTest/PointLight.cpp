@@ -19,8 +19,8 @@ PointLight::PointLight(GLfloat red, GLfloat green, GLfloat blue, GLfloat aIntens
 	this->attenuationExponent = attenuationExponent;
 }
 
-void PointLight::UseLight(GLfloat ambientItensityLocation, GLfloat ambientColorLocation, GLfloat diffuseIntensityLocation,
-	GLfloat positionLocation, GLfloat attenuationConstantLocation, GLfloat attenuationLinearLocation, GLfloat attenuationExponentLocation)
+void PointLight::UseLight(GLuint ambientItensityLocation, GLuint ambientColorLocation, GLuint diffuseIntensityLocation,
+	GLuint positionLocation, GLuint attenuationConstantLocation, GLuint attenuationLinearLocation, GLuint attenuationExponentLocation)
 {
 	glUniform3f(ambientColorLocation, color.x, color.y, color.z);
 	glUniform1f(ambientItensityLocation, ambientIntensity);
