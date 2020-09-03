@@ -158,6 +158,7 @@ int main()
 		0.3f, 0.1f, 0.1f);
 	pointLightCount++;
 
+
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformSpecularIntensity = 0, uniformSpecularPower = 0, uniformEyePositionLocation = 0;
 	glm::mat4 projection = glm::perspective(glm::radians(45.0f), (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 100.0f);
 
