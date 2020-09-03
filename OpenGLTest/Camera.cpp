@@ -13,7 +13,7 @@ Camera::Camera()
 	up = glm::vec3(0, 0, 0);
 }
 
-Camera::Camera(glm::vec3 originalPosition, glm::vec3 startUp, GLfloat yaw, GLfloat pitch, GLfloat turnSpeed, GLfloat movementSpeed)
+Camera::Camera(glm::vec3 originalPosition, glm::vec3 startUp, GLfloat yaw, GLfloat pitch, GLfloat movementSpeed, GLfloat turnSpeed)
 {
 	position = originalPosition;
 	this->worldUp = startUp;

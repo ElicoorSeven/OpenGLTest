@@ -124,13 +124,13 @@ void CreateShaders()
 
 int main()
 {
-	mainWindow = MyGLWindow(800, 600);
+	mainWindow = MyGLWindow(1366, 768); // 1280, 1024 or 1024, 768
 	mainWindow.Initialize();
 
 	CreateObjects();
 	CreateShaders();
 
-	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.5f);
+	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 5.0f, 0.5f);
 
 	fireTexture = Texture("Textures/blue_fire.jpg");
 	fireTexture.LoadTexture();
