@@ -158,13 +158,18 @@ int main()
 		-4.0f, 2.0f, 0.0f,
 		0.3f, 0.1f, 0.1f);
 	pointLightCount++;
-	pointLightCount--;
-	pointLightCount--;
 	unsigned int spotLightCount = 0;
 	spotLights[0] = SpotLight(1.0f, 0.0f, 0.0f,
 		0.0f, 1.0f,
 		0.0f, 0.0f, 0.0f,
 		0.0f, -1.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		20.0f);
+	spotLightCount++;
+	spotLights[1] = SpotLight(1.0f, 1.0f, 1.0f,
+		0.0f, 1.0f,
+		0.0f, -1.5f, 0.0f,
+		-100.0f, -1.0f, 0.0f,
 		1.0f, 0.0f, 0.0f,
 		20.0f);
 	spotLightCount++;
