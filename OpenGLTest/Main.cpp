@@ -32,10 +32,16 @@ std::vector<Mesh*> meshList;
 std::vector<Shader> shaderList;
 Camera camera;
 
+GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
+uniformSpecularIntensity = 0, uniformSpecularPower = 0,
+uniformDirectionalLightTransform = 0;
+
 Texture fireTexture;
 Texture smokeTexture;
 Texture plainTexture;
 
+unsigned int pointLightCount = 0;
+unsigned int spotLightCount = 0;
 Model plants;
 
 Material shinyMaterial;
@@ -130,6 +136,71 @@ void CreateShaders()
 	shaderList.push_back(*shader1);
 }
 
+void RenderScene() {
+	glm::mat4 model(1.0f);
+
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
+	//model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+	fireTexture.UseTexture();
+	shinyMaterial.UseMaterial(uniformSpecularIntensity, uniformSpecularPower);
+	meshList[0]->RenderMesh();
+
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(0.0f, 4.0f, -2.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	smokeTexture.UseTexture();
+	dullMaterial.UseMaterial(uniformSpecularIntensity, uniformSpecularPower);
+	meshList[1]->RenderMesh();
+
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	plainTexture.UseTexture();
+	dullMaterial.UseMaterial(uniformSpecularIntensity, uniformSpecularPower);
+	meshList[2]->RenderMesh();
+
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(-2.0f, 0.0f, 10.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	shinyMaterial.UseMaterial(uniformSpecularIntensity, uniformSpecularPower);
+	plants.RenderModel();
+}
+
+void RenderPass(glm::mat4 viewMatrix, glm::mat4 projectionMatrix) {
+	shaderList[0].UseShader();
+
+	uniformModel = shaderList[0].GetModelLocation();
+	uniformProjection = shaderList[0].GetProjectionLocation();
+	uniformView = shaderList[0].GetViewLocation();
+	uniformModel = shaderList[0].GetModelLocation();
+	uniformEyePosition = shaderList[0].GetEyePositionLocation();
+	uniformSpecularIntensity = shaderList[0].GetSpecularIntensityLocation();
+	uniformSpecularPower = shaderList[0].GetSpecularPowerLocation();
+
+	shaderList[0].SetDirectionalLight(&mainLight);
+	shaderList[0].SetPointLights(pointLights, pointLightCount);
+	shaderList[0].SetSpotLights(spotLights, spotLightCount);
+
+	
+	glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+
+	glViewport(0, 0, 1366, 768);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+	glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+	glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
+
+	shaderList[0].SetDirectionalLight(&mainLight);
+	shaderList[0].SetPointLights(pointLights, pointLightCount);
+	shaderList[0].SetSpotLights(spotLights, spotLightCount);
+
+	RenderScene();
+}
+
 int main()
 {
 	mainWindow = MyGLWindow(1366, 768); // 1280, 1024 or 1024, 768
@@ -154,7 +225,8 @@ int main()
 	plants.LoadModel("Models/Low-Poly Plant_.obj");
 
 	mainLight = DirectionalLight(.2f, .2f, .9f, .2f, .3f, 2.0f, -.0f, -2.0f);
-	unsigned int pointLightCount = 0;
+
+
 	pointLights[0] = PointLight(0.0f, 0.0f, 1.0f,
 		0.0f, 1.0f,
 		0.0f, 0.0f, 0.0f,
@@ -165,7 +237,6 @@ int main()
 		-4.0f, 2.0f, 0.0f,
 		0.3f, 0.1f, 0.1f);
 	pointLightCount++;
-	unsigned int spotLightCount = 0;
 	spotLights[0] = SpotLight(1.0f, 0.0f, 0.0f,
 		0.0f, 1.0f,
 		0.0f, 0.0f, 0.0f,
@@ -202,51 +273,7 @@ int main()
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		shaderList[0].UseShader();
-		uniformModel = shaderList[0].GetModelLocation();
-		uniformProjection = shaderList[0].GetProjectionLocation();
-		uniformView = shaderList[0].GetViewLocation();
-		uniformEyePositionLocation = shaderList[0].GetEyePositionLocation();
-		uniformSpecularIntensity = shaderList[0].GetSpecularIntensityLocation();
-		uniformSpecularPower = shaderList[0].GetSpecularPowerLocation();
-
-		shaderList[0].SetDirectionalLight(&mainLight);
-		shaderList[0].SetPointLights(pointLights, pointLightCount);
-		shaderList[0].SetSpotLights(spotLights, spotLightCount);
-
-		glm::mat4 model(1.0f);
-
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
-		//model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
-		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
-		fireTexture.UseTexture();
-		shinyMaterial.UseMaterial(uniformSpecularIntensity, uniformSpecularPower);
-		meshList[0]->RenderMesh();
-
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, 4.0f, -2.5f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		smokeTexture.UseTexture();
-		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformSpecularPower);
-		meshList[1]->RenderMesh();
-
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		plainTexture.UseTexture();
-		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformSpecularPower);
-		meshList[2]->RenderMesh();
-
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-2.0f, 0.0f, 10.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		shinyMaterial.UseMaterial(uniformSpecularIntensity, uniformSpecularPower);
-		plants.RenderModel();
-
-		glUseProgram(0);
-
+		RenderPass(camera.calculateViewMatrix(), projection);
 		mainWindow.swapBuffers();
 	}
 
