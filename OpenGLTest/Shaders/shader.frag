@@ -63,9 +63,29 @@ uniform vec3 eyePosition;
 float CalcDirectionalShadowFactor(DirectionalLight dLight) {
 	vec3 projectCoords = DirectionalLightSpacePos.xyz / DirectionalLightSpacePos.w;
 	projectCoords  = (projectCoords * .5) + .5;
-	float closestDepth = texture(directionalShadowMap, projectCoords.xy).r;
 	float currentDepth = projectCoords.z;
-	float shadow = currentDepth > closestDepth ? 1.0 : 0.0;
+
+	vec3 normal = normalize(Normal);
+	vec3 lightDir = normalize(dLight.direction);
+
+	float bias = max(0.05 *(1 - dot(normal, lightDir)), 0.005f);
+
+	float shadow = 0.0;
+
+	vec2 texelSize = 1.0/textureSize(directionalShadowMap, 0);
+	for (int i = -1; i < 2; ++i) {
+		for (int j = -1; j < 2; ++j) {
+			float pcfDepth = texture(directionalShadowMap, projectCoords.xy + vec2(i,j) * texelSize).r;
+			shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+		}
+	}
+
+	shadow /= 9.0f;
+
+	if (projectCoords.z > 1.0) {
+		shadow = 0.0;
+	}
+
 	return shadow;
 }
 

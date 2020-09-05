@@ -11,7 +11,7 @@ DirectionalLight::DirectionalLight( GLfloat shadowWidth, GLfloat shadowHeight,
 	GLfloat xDir, GLfloat yDir, GLfloat zDir) : Light(shadowWidth, shadowHeight, red, green, blue, aIntensity, dIntensity)
 {
 	direction = glm::vec3(xDir, yDir, zDir);
-    lightProj = glm::ortho(-5.0f, 5.0f, -5.0f, 5.0f, 0.1f, 20.f);
+    lightProj = glm::ortho(-20.0f, 20.0f, -20.0f, 20.0f, 0.1f, 100.f);
 }
 
 //TODO Make this code not be as silly, so that people can't fuck up.
