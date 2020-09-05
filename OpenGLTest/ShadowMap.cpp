@@ -21,6 +21,7 @@ bool ShadowMap::Init(GLuint width, GLuint height)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 
+
     glBindFramebuffer(GL_FRAMEBUFFER, FBO);
     glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMap, 0);
     
@@ -33,8 +34,6 @@ bool ShadowMap::Init(GLuint width, GLuint height)
         printf("Framebuffer Error: %i\n", status);
         return false;
     }
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     return true;
 }
