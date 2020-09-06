@@ -17,7 +17,7 @@ out vec4 DirectionalLightSpacePos;
 
 void main()
 {
-    gl_Position = projection * view * model * vec4(pos, 1);
+    gl_Position = projection * view * model * vec4(pos, 1.0);
     DirectionalLightSpacePos = directionalLightTransform * model * vec4(pos, 1.0);
     vertexColor = vec4(clamp(pos, 0.0f, 1.0f), 1.0f);
     TexCoord = tex;

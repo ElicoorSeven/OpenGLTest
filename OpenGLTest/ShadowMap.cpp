@@ -35,7 +35,6 @@ bool ShadowMap::Init(GLuint width, GLuint height)
         printf("Framebuffer Error: %i\n", status);
         return false;
     }
-
     return true;
 }
 
